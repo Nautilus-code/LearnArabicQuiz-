@@ -7,7 +7,7 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="data:application/manifest+json,{
         %22name%22:%22Quiz%22,
-        %22short_name%22:%22АрабТест%22,
+        %22short_name%22:%Quiz%22,
         %22start_url%22:%22./%22,
         %22display%22:%22standalone%22,
         %22background_color%22:%22%23f5f7fa%22,
@@ -276,7 +276,7 @@
         const progressBar = document.getElementById('progressBar');
 
         function updateFlipButtonText() {
-            flipBtn.textContent = isFlipped ? 'Рус → Араб' : 'Араб → Рус';
+            flipBtn.textContent = isFlipped ? 'ru → ar' : 'ar → ru';
         }
 
         function parseWordList(text) {
@@ -445,14 +445,7 @@
 
         updateFlipButtonText();
 
-        wordListTextarea.value = `كتاب :: книга
-قلم; ручка
-مدرسة, школа
-هاتف - телефон
-سيارة – машина
-وَاحِدٌ::один
-اِثْنَانِ;два
-ثَلَاثَةٌ,три`;
+        wordListTextarea.value = ``;
     </script>
 </body>
 </html>
