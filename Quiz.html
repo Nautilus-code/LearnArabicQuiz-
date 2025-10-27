@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Арабский тест</title>
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="data:application/manifest+json,{
+        %22name%22:%22Арабский тест%22,
+        %22short_name%22:%22АрабТест%22,
+        %22start_url%22:%22./%22,
+        %22display%22:%22standalone%22,
+        %22background_color%22:%22%23f5f7fa%22,
+        %22theme_color%22:%22%233498db%22,
+        %22icons%22:[{
+            %22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' fill='%233498db'/%3E%3Ccircle cx='96' cy='80' r='40' fill='%23ffffff'/%3E%3Ctext x='96' y='90' font-family='Arial' font-size='40' text-anchor='middle' fill='%233498db'%3EAR%3C/text%3E%3C/svg%3E%22,
+            %22sizes%22:%22192x192%22,
+            %22type%22:%22image/svg+xml%22
+        }]
+    }">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%233498db'/><circle cx='96' cy='80' r='40' fill='%23ffffff'/><text x='96' y='90' font-family='Arial' font-size='40' text-anchor='middle' fill='%233498db'>AR</text></svg>">
+    <style>
+        /* ... (весь ваш CSS без изменений) ... */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+        }
+        .flip-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 6px 10px;
+            font-size: 12px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .flip-btn:hover {
+            background: #7f8c8d;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        textarea {
+            width: 100%;
+            height: 200px;
+            padding: 12px;
+            margin: 15px 0;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-family: monospace;
+            font-size: 14px;
+            resize: vertical;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px 5px;
+            transition: background 0.2s;
+        }
+        .btn:hover {
+            background: #2980b9;
+        }
+        .btn-success {
+            background: #2ecc71;
+        }
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        .btn-warning {
+            background: #f39c12;
+        }
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        .progress {
+            background: #ecf0f1;
+            border-radius: 10px;
+            height: 12px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+        .word {
+            font-size: 32px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin: 25px 0;
+            direction: rtl;
+            unicode-bidi: embed;
+            font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+        }
+        .word.rtl {
+            direction: rtl;
+        }
+        .word.ltr {
+            direction: ltr;
+        }
+        .options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .option {
+            padding: 14px;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #34495e;
+            transition: all 0.2s;
+        }
+        .option:hover {
+            background: #e3f2fd;
+            border-color: #3498db;
+        }
+        .option.selected {
+            background: #d1e7ff;
+            border-color: #3498db;
+            font-weight: bold;
+        }
+        .option.correct {
+            background: #d4edda;
+            border-color: #28a745;
+            color: #155724;
+        }
+        .option.incorrect {
+            background: #f8d7da;
+            border-color: #dc3545;
+            color: #721c24;
+        }
+        .feedback {
+            margin-top: 20px;
+            min-height: 24px;
+            font-weight: bold;
+        }
+        .feedback.correct {
+            color: #28a745;
+        }
+        .feedback.incorrect {
+            color: #dc3545;
+        }
+        .next-btn {
+            margin-top: 20px;
+            padding: 12px 30px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            display: none;
+            transition: background 0.2s;
+        }
+        .next-btn:hover {
+            background: #2980b9;
+        }
+        .result {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .hidden {
+            display: none;
+        }
+        .instructions {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: left;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <button class="flip-btn" id="flipBtn" title="Поменять направление перевода">Араб → Рус</button>
+
+        <h1>Интерактивный тест по арабскому языку</h1>
+
+        <div id="inputSection">
+            <p>Вставьте свой список слов в формате:</p>
+            <div class="instructions">
+                <strong>Поддерживаемые разделители:</strong> <code>::</code>, <code>;</code>, <code>,</code>, <code>-</code>, <code>–</code> (длинное тире)<br>
+                <strong>Пример:</strong><br>
+                كتاب :: книга<br>
+                قلم; ручка<br>
+                مدرسة, школа<br>
+                هاتف - телефон<br>
+                سيارة – машина
+            </div>
+            <textarea id="wordList" placeholder="Введите ваш список слов здесь..."></textarea>
+            <br>
+            <button class="btn btn-success" id="startTestBtn">Начать тест</button>
+        </div>
+
+        <div id="testSection" class="hidden">
+            <div class="progress">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div id="questionCounter">Вопрос <span id="current">1</span> из <span id="total">0</span></div>
+            <div class="word" id="arabicWord"></div>
+            <div class="options" id="options"></div>
+            <div class="feedback" id="feedback"></div>
+            <button class="next-btn" id="nextBtn">Следующий вопрос</button>
+            <div class="result" id="result"></div>
+            <button class="btn btn-warning" id="restartInputBtn">Изменить список</button>
+        </div>
+
+        <button class="btn btn-warning" id="restartBtn" style="display:none;">Пройти снова</button>
+    </div>
+
+    <script>
+        // ... (весь ваш JavaScript без изменений) ...
+        const inputSection = document.getElementById('inputSection');
+        const testSection = document.getElementById('testSection');
+        const wordListTextarea = document.getElementById('wordList');
+        const startTestBtn = document.getElementById('startTestBtn');
+        const restartInputBtn = document.getElementById('restartInputBtn');
+        const restartBtn = document.getElementById('restartBtn');
+        const flipBtn = document.getElementById('flipBtn');
+
+        let dictionary = [];
+        let shuffledWords = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let selectedOption = null;
+        let isFlipped = false;
+
+        const arabicWordEl = document.getElementById('arabicWord');
+        const optionsEl = document.getElementById('options');
+        const feedbackEl = document.getElementById('feedback');
+        const nextBtn = document.getElementById('nextBtn');
+        const resultEl = document.getElementById('result');
+        const currentEl = document.getElementById('current');
+        const totalEl = document.getElementById('total');
+        const progressBar = document.getElementById('progressBar');
+
+        function updateFlipButtonText() {
+            flipBtn.textContent = isFlipped ? 'Рус → Араб' : 'Араб → Рус';
+        }
+
+        function parseWordList(text) {
+            const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+            const result = [];
+            const separators = [ /::/, /;/, /(?<!\d),(?!\d)/, / – /, / –/, /– /, /–/, / - /, / -/, /- /, /-/ ];
+
+            for (const line of lines) {
+                let found = false;
+                for (const sep of separators) {
+                    if (sep.test(line)) {
+                        const parts = line.split(sep).map(part => part.trim()).filter(part => part.length > 0);
+                        if (parts.length >= 2) {
+                            result.push({
+                                arabic: parts[0],
+                                russian: parts[1]
+                            });
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if (!found) {
+                    console.warn(`Строка не распознана: "${line}"`);
+                }
+            }
+            return result;
+        }
+
+        function shuffleArray(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+
+        function getRandomOptions(correctAnswer, allAnswers) {
+            const options = [correctAnswer];
+            const otherAnswers = allAnswers.filter(a => a !== correctAnswer);
+            const shuffled = shuffleArray(otherAnswers);
+            while (options.length < 4 && shuffled.length > 0) {
+                options.push(shuffled.pop());
+            }
+            while (options.length < 4) {
+                options.push(options[options.length % correctAnswer.length]);
+            }
+            return shuffleArray(options.slice(0, 4));
+        }
+
+        function startTest() {
+            const text = wordListTextarea.value;
+            dictionary = parseWordList(text);
+
+            if (dictionary.length === 0) {
+                alert('Не удалось распознать ни одного слова. Проверьте формат.');
+                return;
+            }
+
+            inputSection.classList.add('hidden');
+            testSection.classList.remove('hidden');
+            restartBtn.style.display = 'none';
+
+            shuffledWords = shuffleArray(dictionary);
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            if (currentQuestionIndex >= shuffledWords.length) {
+                showResult();
+                return;
+            }
+
+            const currentWord = shuffledWords[currentQuestionIndex];
+            const questionText = isFlipped ? currentWord.russian : currentWord.arabic;
+            const correctAnswer = isFlipped ? currentWord.arabic : currentWord.russian;
+
+            arabicWordEl.textContent = questionText;
+            arabicWordEl.className = 'word ' + (isFlipped ? 'ltr' : 'rtl');
+
+            currentEl.textContent = currentQuestionIndex + 1;
+            totalEl.textContent = shuffledWords.length;
+            progressBar.style.width = `${((currentQuestionIndex) / shuffledWords.length) * 100}%`;
+
+            const allOptions = dictionary.map(item => isFlipped ? item.arabic : item.russian);
+            const options = getRandomOptions(correctAnswer, allOptions);
+
+            optionsEl.innerHTML = '';
+            options.forEach(option => {
+                const button = document.createElement('div');
+                button.className = 'option';
+                button.textContent = option;
+                button.dataset.answer = option;
+                button.addEventListener('click', () => selectOption(button, correctAnswer));
+                optionsEl.appendChild(button);
+            });
+
+            feedbackEl.textContent = '';
+            feedbackEl.className = 'feedback';
+            nextBtn.style.display = 'none';
+            selectedOption = null;
+        }
+
+        function selectOption(optionEl, correctAnswer) {
+            if (selectedOption) return;
+
+            selectedOption = optionEl.dataset.answer;
+            const isCorrect = selectedOption === correctAnswer;
+
+            document.querySelectorAll('.option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+
+            optionEl.classList.add(isCorrect ? 'correct' : 'incorrect');
+            if (!isCorrect) {
+                document.querySelectorAll('.option').forEach(opt => {
+                    if (opt.dataset.answer === correctAnswer) {
+                        opt.classList.add('correct');
+                    }
+                });
+            }
+
+            feedbackEl.textContent = isCorrect ? '✅ Правильно!' : `❌ Неверно. Правильный ответ: ${correctAnswer}`;
+            feedbackEl.className = `feedback ${isCorrect ? 'correct' : 'incorrect'}`;
+
+            if (isCorrect) score++;
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function showResult() {
+            const percentage = Math.round((score / dictionary.length) * 100);
+            resultEl.innerHTML = `
+                Тест завершён!<br>
+                Ваш результат: <strong>${score} из ${dictionary.length}</strong> (${percentage}%)
+            `;
+            restartBtn.style.display = 'inline-block';
+        }
+
+        startTestBtn.addEventListener('click', startTest);
+        restartInputBtn.addEventListener('click', () => {
+            testSection.classList.add('hidden');
+            inputSection.classList.remove('hidden');
+            resultEl.textContent = '';
+        });
+        restartBtn.addEventListener('click', () => {
+            currentQuestionIndex = 0;
+            score = 0;
+            resultEl.textContent = '';
+            restartBtn.style.display = 'none';
+            loadQuestion();
+        });
+        nextBtn.addEventListener('click', () => {
+            currentQuestionIndex++;
+            loadQuestion();
+        });
+
+        flipBtn.addEventListener('click', () => {
+            isFlipped = !isFlipped;
+            updateFlipButtonText();
+            if (!inputSection.classList.contains('hidden')) {
+                return;
+            }
+            shuffledWords = shuffleArray(dictionary);
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        });
+
+        updateFlipButtonText();
+
+        wordListTextarea.value = `كتاب :: книга
+قلم; ручка
+مدرسة, школа
+هاتف - телефон
+سيارة – машина
+وَاحِدٌ::один
+اِثْنَانِ;два
+ثَلَاثَةٌ,три`;
+    </script>
+</body>
+</html>
